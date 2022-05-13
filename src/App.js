@@ -3,7 +3,7 @@ import Nav from './Nav';
 import './App.css';
 import { items } from "./static-data";
 import ItemPage from "./ItemPage";
-import CartPage from "./ CartPage";
+import CartPage from "./CartPage";
 
 const summarizeCart = (cart) => {
   const groupItems = cart.reduce((summary, item) => {
@@ -25,6 +25,16 @@ const App = () => {
     const addToCart = (item) => {
       setCart([...cart, item]);
     };
+    const removeItem = (item) => {
+      let index = cart.findIndex(i => i.id === item.id);
+      if (index >= 0) {
+        setCart(cart => {
+          const copy = [...cart];
+          copy.splice(index, 1);
+          return copy;
+        });
+      }
+    }
   return (
     <div className="App">
       <Nav activeTab={activeTab} onTabChange={setActiveTab}/>
@@ -35,12 +45,12 @@ const App = () => {
   );
 };
 
-const Content = ({tab, onAddToCart, cart}) => {
+const Content = ({tab, onAddToCart, cart, onRemoveItem}) => {
   switch (tab) {
     case 'items':
       return <ItemPage items={items} onAddToCart={onAddToCart}/>;
     case 'cart':
-      return <CartPage items={cart}/>;
+      return <CartPage items={cart} onAddOne={onAddToCart} onRemoveOne={onRemoveItem}/>;
     default:
       break;
   }
